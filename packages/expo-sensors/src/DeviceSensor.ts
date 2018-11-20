@@ -1,14 +1,12 @@
-// @flow
-
 import { EventEmitter, Platform } from 'expo-core';
 
-type Listener<E> = E => void;
+type Listener<E> = (event: E) => void;
 
 type Subscription = {
   remove: () => void,
 };
 
-type NativeSensorModule = Object;
+type NativeSensorModule = any;
 
 /**
  * A base class for subscribable sensors. The events emitted by this class are measurements
