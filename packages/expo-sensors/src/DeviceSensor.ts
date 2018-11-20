@@ -16,24 +16,37 @@ export default class DeviceSensor<M> {
   _nativeModule: NativeSensorModule;
   _nativeEmitter: EventEmitter;
   _nativeEventName: string;
+  _listenersCount: number;
 
   constructor(nativeSensorModule: NativeSensorModule, nativeEventName: string) {
     this._nativeModule = nativeSensorModule;
     this._nativeEmitter = new EventEmitter(nativeSensorModule);
     this._nativeEventName = nativeEventName;
+    this._listenersCount = 0;
   }
 
   addListener(listener: Listener<M>): Subscription {
     let subscription = this._nativeEmitter.addListener(this._nativeEventName, listener);
     subscription.remove = () => this.removeSubscription(subscription);
+    this._listenersCount++;
     return subscription;
   }
 
+  hasListeners(): boolean {
+    return this._listenersCount > 0;
+  }
+
+  getListenerCount(): number {
+    return this._listenersCount;
+  }
+
   removeAllListeners(): void {
+    this._listenersCount = 0;
     this._nativeEmitter.removeAllListeners(this._nativeEventName);
   }
 
   removeSubscription(subscription: Subscription): void {
+    this._listenersCount--;
     this._nativeEmitter.removeSubscription(subscription);
   }
 
