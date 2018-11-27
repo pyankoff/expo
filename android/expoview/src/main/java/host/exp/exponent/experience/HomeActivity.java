@@ -96,11 +96,6 @@ public class HomeActivity extends BaseExperienceActivity {
     mKernel.setHasError();
   }
 
-  @Override
-  public List<Package> expoPackages() {
-    return homeExpoPackages();
-  }
-
   public static List<Package> homeExpoPackages() {
     return Arrays.<Package>asList(
         new ConstantsPackage(),
