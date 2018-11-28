@@ -33,13 +33,13 @@ self: super:
           ];
           preFixup = ''
             detach="$out/lib/node_modules/expo-cli/node_modules/xdl/build/detach"
-            substituteInPlace "$detach/IosShellApp.js" \
-              --replace xcpretty ${self.xcpretty}/bin/xcpretty \
-              --replace "pod " "${self.cocoapods}/bin/pod "
-            for f in Ios{CodeSigning,Keychain}.js; do
-              substituteInPlace "$detach/$f" \
-                --replace "'fastlane'" "'${self.fastlane}/bin/fastlane'"
-            done
+            ${super.lib.optionalString super.stdenv.isDarwin ''
+              substituteInPlace "$detach/IosShellApp.js" --replace xcpretty ${self.xcpretty}/bin/xcpretty
+	      substituteInPlace "$detach/IosShellApp.js" --replace "'pod'" "'${self.cocoapods}/bin/pod'"
+              for f in Ios{CodeSigning,Keychain}.js; do
+                substituteInPlace "$detach/$f" --replace "'fastlane'" "'${self.fastlane}/bin/fastlane'"
+              done
+            ''}
          '';
         };
       };
